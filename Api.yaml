@@ -1,0 +1,1446 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Course recommendation system
+  description: Software Engineering Project Group 17
+paths:
+  /api/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  role:
+                    type: string
+        "300":
+          description: Wrong password
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+        "404":
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+  /api/register:
+    post:
+      summary: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                full_name:
+                  type: string
+                role:
+                  type: string
+      responses:
+        "200":
+          description: Registration Done
+        "500":
+          description: Unknown error
+  /api/student:
+    get:
+      summary: Get Student Details
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dob:
+                    type: string
+                  roll_no:
+                    type: string
+                  gender:
+                    type: string
+                  category:
+                    type: string
+                  country:
+                    type: string
+                  pwd:
+                    type: string
+                  type_of_disability:
+                    type: string
+                  requirement:
+                    type: string
+                  bandwith:
+                    type: string
+                  reason_of_joining:
+                    type: string
+                  hours_dedicated:
+                    type: string
+                  source_kind:
+                    type: string
+                  target_for_iitm:
+                    type: string
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    post:
+      summary: Add Student Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dob:
+                  type: string
+                roll_no:
+                  type: string
+                gender:
+                  type: string
+                category:
+                  type: string
+                country:
+                  type: string
+                pwd:
+                  type: string
+                type_of_disability:
+                  type: string
+                requirement:
+                  type: string
+                bandwith:
+                  type: string
+                reason_of_joining:
+                  type: string
+                hours_dedicated:
+                  type: string
+                source_kind:
+                  type: string
+                target_for_iitm:
+                  type: string
+      responses:
+        "200":
+          description: Student detailed added
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "300":
+          description: Student detailed already exists
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    put:
+      summary: Update Student Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dob:
+                  type: string
+                roll_no:
+                  type: string
+                gender:
+                  type: string
+                category:
+                  type: string
+                country:
+                  type: string
+                pwd:
+                  type: string
+                type_of_disability:
+                  type: string
+                requirement:
+                  type: string
+                bandwith:
+                  type: string
+                reason_of_joining:
+                  type: string
+                hours_dedicated:
+                  type: string
+                source_kind:
+                  type: string
+                target_for_iitm:
+                  type: string
+      responses:
+        "200":
+          description: Student detail updated
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    delete:
+      summary: Delete Student Details
+      responses:
+        "200":
+          description: Student detailed delete
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+  /api/school:
+    get:
+      summary: Get School Details
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  school_name:
+                    type: string
+                  type_of_school:
+                    type: string
+                  marks:
+                    type: string
+                  pass_status:
+                    type: string
+                  year_of_passing:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  other_city:
+                    type: string
+                  other_state:
+                    type: string
+                  country_of_school:
+                    type: string
+        "400":
+          description: No detail found
+    post:
+      summary: Add School Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                school_name:
+                  type: string
+                type_of_school:
+                  type: string
+                marks:
+                  type: string
+                pass_status:
+                  type: string
+                year_of_passing:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                other_city:
+                  type: string
+                other_state:
+                  type: string
+                country_of_school:
+                  type: string
+      responses:
+        "200":
+          description: School details added
+        "300":
+          description: School details already exists
+    put:
+      summary: Update School Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                school_name:
+                  type: string
+                type_of_school:
+                  type: string
+                marks:
+                  type: string
+                pass_status:
+                  type: string
+                year_of_passing:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                other_city:
+                  type: string
+                other_state:
+                  type: string
+                country_of_school:
+                  type: string
+      responses:
+        "200":
+          description: School details updated
+        "400":
+          description: School details does not exist
+    delete:
+      summary: Delete School Details
+      responses:
+        "200":
+          description: School details delete
+        "400":
+          description: School details does not exist
+  /api/college:
+    get:
+      summary: Get College Details
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  college_name:
+                    type: string
+                  university:
+                    type: string
+                  field_of_study:
+                    type: string
+                  roll_no:
+                    type: string
+                  college_status:
+                    type: string
+                  year_of_joining:
+                    type: string
+                  year_of_completion:
+                    type: string
+                  current_year:
+                    type: string
+                  reason_for_dropping:
+                    type: string
+                  college_state:
+                    type: string
+                  college_country:
+                    type: string
+                  qualifying_criteria:
+                    type: string
+        "400":
+          description: College details does not exist
+    post:
+      summary: Add College Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                college_name:
+                  type: string
+                university:
+                  type: string
+                field_of_study:
+                  type: string
+                roll_no:
+                  type: string
+                college_status:
+                  type: string
+                year_of_joining:
+                  type: string
+                year_of_completion:
+                  type: string
+                current_year:
+                  type: string
+                reason_for_dropping:
+                  type: string
+                college_state:
+                  type: string
+                college_country:
+                  type: string
+                qualifying_criteria:
+                  type: string
+      responses:
+        "200":
+          description: Details added
+        "300":
+          description: Details already exists
+    put:
+      summary: Update College Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                college_name:
+                  type: string
+                university:
+                  type: string
+                field_of_study:
+                  type: string
+                roll_no:
+                  type: string
+                college_status:
+                  type: string
+                year_of_joining:
+                  type: string
+                year_of_completion:
+                  type: string
+                current_year:
+                  type: string
+                reason_for_dropping:
+                  type: string
+                college_state:
+                  type: string
+                college_country:
+                  type: string
+                qualifying_criteria:
+                  type: string
+      responses:
+        "200":
+          description: Details updated
+        "400":
+          description: Details does not exist
+    delete:
+      summary: Delete College Details
+      responses:
+        "200":
+          description: Details deleted
+        "400":
+          description: Details does not exist
+  /api/jee:
+    get:
+      summary: Get JEE Details
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jee_qualified:
+                    type: string
+                  reg_id:
+                    type: string
+                  qualified_month:
+                    type: string
+                  qualified_year:
+                    type: string
+        "404":
+          description: Details does not exist
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    post:
+      summary: Add JEE Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jee_qualified:
+                  type: string
+                reg_id:
+                  type: string
+                qualified_month:
+                  type: string
+                qualified_year:
+                  type: string
+      responses:
+        "200":
+          description: Details added
+        "300":
+          description: Details already exist
+    put:
+      summary: "Update JEE details"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jee_qualified:
+                  type: string
+                reg_id:
+                  type: string
+                qualified_month:
+                  type: string
+                qualified_year:
+                  type: string
+      responses:
+        "200":
+          description: "Successful operation"
+    delete:
+      summary: "Delete JEE details"
+      responses:
+        "200":
+          description: "Successful operation"
+  /api/completedcourse:
+    get:
+      summary: "Get completed courses"
+      responses:
+        "200":
+          description: "Completed courses"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "integer"
+                    course_id:
+                      type: "integer"
+                    marks:
+                      type: "integer"
+                    term_of_completion:
+                      type: "string"
+                    name:
+                      type: "string"
+        "404":
+          description: "Details do not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    post:
+      summary: "Add a completed course"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                course_id:
+                  type: "integer"
+                marks:
+                  type: "integer"
+                term_of_completion:
+                  type: "string"
+                name:
+                  type: "string"
+      responses:
+        "200":
+          description: "Course added"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: "Course already exists"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    put:
+      summary: "Update a completed course"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                course_id:
+                  type: "integer"
+                marks:
+                  type: "integer"
+                term_of_completion:
+                  type: "string"
+                name:
+                  type: "string"
+      responses:
+        "200":
+          description: "Course updated"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: "Course does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    delete:
+      summary: "Delete a completed course"
+      operationId: "deleteCompletedCourse"
+      responses:
+        "200":
+          description: "Course deleted"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: "Course does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+  /api/recommendation:
+    get:
+      summary: "Get course recommendation"
+      responses:
+        "200":
+          description: "Completed courses"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    course_id:
+                      type: "integer"
+                    name:
+                      type: "string"
+                    code:
+                      type: "string"
+                    term:
+                      type: "string"
+        "500":
+          description: "Server Error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+  /api/admin/student:
+    get:
+      summary: Get Student Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: "integer"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dob:
+                    type: string
+                  roll_no:
+                    type: string
+                  gender:
+                    type: string
+                  category:
+                    type: string
+                  country:
+                    type: string
+                  pwd:
+                    type: string
+                  type_of_disability:
+                    type: string
+                  requirement:
+                    type: string
+                  bandwith:
+                    type: string
+                  reason_of_joining:
+                    type: string
+                  hours_dedicated:
+                    type: string
+                  source_kind:
+                    type: string
+                  target_for_iitm:
+                    type: string
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    post:
+      summary: Add Student Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                dob:
+                  type: string
+                roll_no:
+                  type: string
+                gender:
+                  type: string
+                category:
+                  type: string
+                country:
+                  type: string
+                pwd:
+                  type: string
+                type_of_disability:
+                  type: string
+                requirement:
+                  type: string
+                bandwith:
+                  type: string
+                reason_of_joining:
+                  type: string
+                hours_dedicated:
+                  type: string
+                source_kind:
+                  type: string
+                target_for_iitm:
+                  type: string
+      responses:
+        "200":
+          description: Student detailed added
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "300":
+          description: Student detailed already exists
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    put:
+      summary: Update Student Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                dob:
+                  type: string
+                roll_no:
+                  type: string
+                gender:
+                  type: string
+                category:
+                  type: string
+                country:
+                  type: string
+                pwd:
+                  type: string
+                type_of_disability:
+                  type: string
+                requirement:
+                  type: string
+                bandwith:
+                  type: string
+                reason_of_joining:
+                  type: string
+                hours_dedicated:
+                  type: string
+                source_kind:
+                  type: string
+                target_for_iitm:
+                  type: string
+      responses:
+        "200":
+          description: Student detail updated
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    delete:
+      summary: Delete Student Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: Student detailed delete
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: No detail found
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+  /api/admin/school:
+    get:
+      summary: Get School Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  school_name:
+                    type: string
+                  type_of_school:
+                    type: string
+                  marks:
+                    type: string
+                  pass_status:
+                    type: string
+                  year_of_passing:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  other_city:
+                    type: string
+                  other_state:
+                    type: string
+                  country_of_school:
+                    type: string
+        "400":
+          description: No detail found
+    post:
+      summary: Add School Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                school_name:
+                  type: string
+                type_of_school:
+                  type: string
+                marks:
+                  type: string
+                pass_status:
+                  type: string
+                year_of_passing:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                other_city:
+                  type: string
+                other_state:
+                  type: string
+                country_of_school:
+                  type: string
+      responses:
+        "200":
+          description: School details added
+        "300":
+          description: School details already exists
+    put:
+      summary: Update School Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                school_name:
+                  type: string
+                type_of_school:
+                  type: string
+                marks:
+                  type: string
+                pass_status:
+                  type: string
+                year_of_passing:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                other_city:
+                  type: string
+                other_state:
+                  type: string
+                country_of_school:
+                  type: string
+      responses:
+        "200":
+          description: School details updated
+        "400":
+          description: School details does not exist
+    delete:
+      summary: Delete School Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: School details delete
+        "400":
+          description: School details does not exist
+  /api/admin/college:
+    get:
+      summary: Get College Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  college_name:
+                    type: string
+                  university:
+                    type: string
+                  field_of_study:
+                    type: string
+                  roll_no:
+                    type: string
+                  college_status:
+                    type: string
+                  year_of_joining:
+                    type: string
+                  year_of_completion:
+                    type: string
+                  current_year:
+                    type: string
+                  reason_for_dropping:
+                    type: string
+                  college_state:
+                    type: string
+                  college_country:
+                    type: string
+                  qualifying_criteria:
+                    type: string
+        "400":
+          description: College details does not exist
+    post:
+      summary: Add College Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                college_name:
+                  type: string
+                university:
+                  type: string
+                field_of_study:
+                  type: string
+                roll_no:
+                  type: string
+                college_status:
+                  type: string
+                year_of_joining:
+                  type: string
+                year_of_completion:
+                  type: string
+                current_year:
+                  type: string
+                reason_for_dropping:
+                  type: string
+                college_state:
+                  type: string
+                college_country:
+                  type: string
+                qualifying_criteria:
+                  type: string
+      responses:
+        "200":
+          description: Details added
+        "300":
+          description: Details already exists
+    put:
+      summary: Update College Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                college_name:
+                  type: string
+                university:
+                  type: string
+                field_of_study:
+                  type: string
+                roll_no:
+                  type: string
+                college_status:
+                  type: string
+                year_of_joining:
+                  type: string
+                year_of_completion:
+                  type: string
+                current_year:
+                  type: string
+                reason_for_dropping:
+                  type: string
+                college_state:
+                  type: string
+                college_country:
+                  type: string
+                qualifying_criteria:
+                  type: string
+      responses:
+        "200":
+          description: Details updated
+        "400":
+          description: Details does not exist
+    delete:
+      summary: Delete College Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: Details deleted
+        "400":
+          description: Details does not exist
+  /api/admin/jee:
+    get:
+      summary: Get JEE Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jee_qualified:
+                    type: string
+                  reg_id:
+                    type: string
+                  qualified_month:
+                    type: string
+                  qualified_year:
+                    type: string
+        "404":
+          description: Details does not exist
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    post:
+      summary: Add JEE Details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                jee_qualified:
+                  type: string
+                reg_id:
+                  type: string
+                qualified_month:
+                  type: string
+                qualified_year:
+                  type: string
+      responses:
+        "200":
+          description: Details added
+        "300":
+          description: Details already exist
+    put:
+      summary: "Update JEE details"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                jee_qualified:
+                  type: string
+                reg_id:
+                  type: string
+                qualified_month:
+                  type: string
+                qualified_year:
+                  type: string
+      responses:
+        "200":
+          description: "Successful operation"
+    delete:
+      summary: "Delete JEE details"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: "Successful operation"
+  /api/admin/completedcourse:
+    get:
+      summary: "Get completed courses"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: "Completed courses"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "integer"
+                    course_id:
+                      type: "integer"
+                    marks:
+                      type: "integer"
+                    term_of_completion:
+                      type: "string"
+                    name:
+                      type: "string"
+        "404":
+          description: "Details do not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    post:
+      summary: "Add a completed course"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                id:
+                  type: "integer"
+                course_id:
+                  type: "integer"
+                marks:
+                  type: "integer"
+                term_of_completion:
+                  type: "string"
+                name:
+                  type: "string"
+      responses:
+        "200":
+          description: "Course added"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: "Course already exists"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    put:
+      summary: "Update a completed course"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                id:
+                  type: "integer"
+                course_id:
+                  type: "integer"
+                marks:
+                  type: "integer"
+                term_of_completion:
+                  type: "string"
+                name:
+                  type: "string"
+      responses:
+        "200":
+          description: "Course updated"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: "Course does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+    delete:
+      summary: "Delete a completed course"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        "200":
+          description: "Course deleted"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "404":
+          description: "Course does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
