@@ -2,7 +2,9 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: Course recommendation system
-  description: Software Engineering Project Group 17
+  description: "Software Engineering Project Group 17"
+servers:
+  - url: http://localhost:5000
 paths:
   /api/login:
     post:
@@ -74,6 +76,8 @@ paths:
   /api/student:
     get:
       summary: Get Student Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: Successful operation
@@ -117,8 +121,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add Student Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -180,8 +188,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update Student Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -234,8 +246,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete Student Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: Student detailed delete
@@ -255,9 +271,13 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/school:
     get:
       summary: Get School Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: Successful operation
@@ -288,8 +308,12 @@ paths:
                     type: string
         "400":
           description: No detail found
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add School Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -322,8 +346,12 @@ paths:
           description: School details added
         "300":
           description: School details already exists
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update School Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -356,16 +384,24 @@ paths:
           description: School details updated
         "400":
           description: School details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete School Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: School details delete
         "400":
           description: School details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/college:
     get:
       summary: Get College Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: Successful operation
@@ -400,8 +436,12 @@ paths:
                     type: string
         "400":
           description: College details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add College Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -438,8 +478,12 @@ paths:
           description: Details added
         "300":
           description: Details already exists
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update College Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -476,16 +520,24 @@ paths:
           description: Details updated
         "400":
           description: Details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete College Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: Details deleted
         "400":
           description: Details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/jee:
     get:
       summary: Get JEE Details
+      security:
+        - Auth: []
       responses:
         "200":
           description: Successful operation
@@ -511,8 +563,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add JEE Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -533,8 +589,12 @@ paths:
           description: Details added
         "300":
           description: Details already exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: "Update JEE details"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -553,14 +613,22 @@ paths:
       responses:
         "200":
           description: "Successful operation"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: "Delete JEE details"
+      security:
+        - Auth: []
       responses:
         "200":
           description: "Successful operation"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/completedcourse:
     get:
       summary: "Get completed courses"
+      security:
+        - Auth: []
       responses:
         "200":
           description: "Completed courses"
@@ -590,8 +658,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: "Add a completed course"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -628,8 +700,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: "Update a completed course"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -666,9 +742,21 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: "Delete a completed course"
-      operationId: "deleteCompletedCourse"
+      security:
+        - Auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                course_id:
+                  type: "integer"
       responses:
         "200":
           description: "Course deleted"
@@ -688,9 +776,13 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/recommendation:
     get:
       summary: "Get course recommendation"
+      security:
+        - Auth: []
       responses:
         "200":
           description: "Completed courses"
@@ -718,9 +810,13 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/admin/student:
     get:
       summary: Get Student Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -773,8 +869,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add Student Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -838,8 +938,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update Student Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -894,8 +998,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete Student Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -924,9 +1032,13 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/admin/school:
     get:
       summary: Get School Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -966,8 +1078,12 @@ paths:
                     type: string
         "400":
           description: No detail found
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add School Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1002,8 +1118,12 @@ paths:
           description: School details added
         "300":
           description: School details already exists
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update School Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1038,8 +1158,12 @@ paths:
           description: School details updated
         "400":
           description: School details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete School Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1054,9 +1178,13 @@ paths:
           description: School details delete
         "400":
           description: School details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/admin/college:
     get:
       summary: Get College Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1100,8 +1228,12 @@ paths:
                     type: string
         "400":
           description: College details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add College Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1140,8 +1272,12 @@ paths:
           description: Details added
         "300":
           description: Details already exists
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update College Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1180,8 +1316,12 @@ paths:
           description: Details updated
         "400":
           description: Details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete College Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1196,9 +1336,13 @@ paths:
           description: Details deleted
         "400":
           description: Details does not exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/admin/jee:
     get:
       summary: Get JEE Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1233,8 +1377,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: Add JEE Details
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1257,8 +1405,12 @@ paths:
           description: Details added
         "300":
           description: Details already exist
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: "Update JEE details"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1279,8 +1431,12 @@ paths:
       responses:
         "200":
           description: "Successful operation"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: "Delete JEE details"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1293,9 +1449,13 @@ paths:
       responses:
         "200":
           description: "Successful operation"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
   /api/admin/completedcourse:
     get:
       summary: "Get completed courses"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1334,8 +1494,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     post:
       summary: "Add a completed course"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1374,8 +1538,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: "Update a completed course"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1414,8 +1582,12 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: "Delete a completed course"
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -1444,3 +1616,19 @@ paths:
                 properties:
                   error:
                     type: "string"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+components:
+  securitySchemes:
+    Auth:
+      type: apiKey
+      in: header
+      name: Authentication-Token
+  responses:
+    UnauthorizedError:
+      description: Authentication-Token is missing or invalid
+      headers:
+        Authentication-Token:
+          schema:
+            type: string

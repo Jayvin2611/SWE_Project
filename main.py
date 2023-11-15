@@ -27,6 +27,7 @@ app.app_context().push()
 app.config["SECRET_KEY"] = "secret key"
 app.config["SECURITY_PASSWORD_HASH"] = "bcrypt"
 app.config["SECURITY_PASSWORD_SALT"] = "mysecret"
+app.config['SECURITY_TOKEN_AUTHENTICATION_HEADER'] = 'Authentication-Token'
 app.config["SECURITY_REGISTERABLE"] = False
 app.config["SECURITY_CONFIRMABLE"] = False
 app.config["SECURITY_SEND_REGISTER_EMAIL"] = False
