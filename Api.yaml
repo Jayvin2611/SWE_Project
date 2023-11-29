@@ -812,6 +812,156 @@ paths:
                     type: "string"
         '401':
           $ref: "#/components/responses/UnauthorizedError"
+  /api/admin/course:
+   get:
+     summary: Get a course by ID
+     security:
+        - Auth: []
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+               id:
+                type: integer
+     responses:
+       '200':
+         description: Course found
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                name:
+                  type: string
+                code:
+                  type: string
+                pre_requisite:
+                  type: string
+                level:
+                  type: string
+       '401':
+          $ref: "#/components/responses/UnauthorizedError"
+       '404':
+         description: Course not found
+   post:
+     summary: Create a new course
+     security:
+        - Auth: []
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+               name:
+                type: string
+               code:
+                type: string
+               pre_requisite:
+                type: string
+               level:
+                type: string
+     responses:
+       '200':
+         description: Course created
+       '300':
+         description: Course already exists
+       '401':
+          $ref: "#/components/responses/UnauthorizedError"
+   put:
+     summary: Update a course
+     security:
+        - Auth: []
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+               id:
+                type: integer
+               name:
+                type: string
+               code:
+                type: string
+               pre_requisite:
+                type: string
+               level:
+                type: string
+     responses:
+       '200':
+         description: Course updated
+       '401':
+          $ref: "#/components/responses/UnauthorizedError"
+       '404':
+         description: Course not found
+   delete:
+     summary: Delete a course
+     security:
+        - Auth: []
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+               id:
+                type: integer
+     responses:
+       '200':
+         description: Course deleted
+       '401':
+          $ref: "#/components/responses/UnauthorizedError"
+       '404':
+         description: Course not found
+  
+  /api/admin/studentsearch:
+   get:
+     summary: Search for students
+     security:
+        - Auth: []
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+               query:
+                type: string
+     responses:
+       '200':
+         description: List of students
+         content:
+           application/json:
+             schema:
+               type: array
+               items:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                  full_name:
+                    type: string
+                  roll_no:
+                    type: string
+       '401':
+          $ref: "#/components/responses/UnauthorizedError"
+       '404':
+         description: Query cannot be empty
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                error:
+                  type: string
   /api/admin/student:
     get:
       summary: Get Student Details

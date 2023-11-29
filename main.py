@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_security import (
     current_user,
     Security,
@@ -14,142 +13,40 @@ from flask_security import (
 from flask_security import UserMixin, RoleMixin
 from flask_restful import Resource, Api, fields, marshal_with, reqparse
 from sqlalchemy.exc import SQLAlchemyError
+from flask_cors import CORS
+from application.model import *
 
 
-app = Flask(__name__)
+def create_app(name,dbURI):
+    app = Flask(name)
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = dbURI
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    db.init_app(app)
+    api = Api(app)
+    CORS(app)
+    app.app_context().push()
+    app.config["SECRET_KEY"] = "secret key"
+    app.config["SECURITY_PASSWORD_HASH"] = "bcrypt"
+    app.config["SECURITY_PASSWORD_SINGLE_HASH"]="plaintext"
+    app.config["SECURITY_PASSWORD_SALT"] = "mysecret"
+    app.config["SECURITY_TOKEN_AUTHENTICATION_HEADER"] = "Authentication-Token"
+    app.config["SECURITY_REGISTERABLE"] = False
+    app.config["SECURITY_CONFIRMABLE"] = False
+    app.config["SECURITY_SEND_REGISTER_EMAIL"] = False
+    app.config["SECURITY_UNAUTHORIZED_VIEW"] = None
+    app.config["WTF_CSRF_ENABLED"] = False
+    user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
+    security = Security(app, user_datastore)
+    app.app_context().push()
+    return app,api,user_datastore
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
-api = Api(app)
-app.app_context().push()
-app.config["SECRET_KEY"] = "secret key"
-app.config["SECURITY_PASSWORD_HASH"] = "bcrypt"
-app.config["SECURITY_PASSWORD_SALT"] = "mysecret"
-app.config['SECURITY_TOKEN_AUTHENTICATION_HEADER'] = 'Authentication-Token'
-app.config["SECURITY_REGISTERABLE"] = False
-app.config["SECURITY_CONFIRMABLE"] = False
-app.config["SECURITY_SEND_REGISTER_EMAIL"] = False
-app.config["SECURITY_UNAUTHORIZED_VIEW"] = None
-app.config["WTF_CSRF_ENABLED"] = False
+# app,api,user_datastore = create_app(__name__,"sqlite:///database.sqlite3")
+app,api,user_datastore = create_app(__name__,"sqlite:///:memory:")
 
 
-roles_users = db.Table(
-    "roles_users",
-    db.Column("user_id", db.Integer(), db.ForeignKey("user.id")),
-    db.Column("role_id", db.Integer(), db.ForeignKey("role.id")),
-)
 
-
-class User(db.Model, UserMixin):
-    __tablename__ = "user"
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
-    full_name = db.Column(db.String, nullable=False)
-    active = db.Column(db.Boolean)
-    fs_uniquifier = db.Column(db.String, unique=True, nullable=False)
-    roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users"))
-    student = db.relationship("Student", backref="user")
-    school = db.relationship("SchoolDetails", backref="user")
-    college = db.relationship("CollegeDetails", backref="user")
-    jee = db.relationship("JeeDetails", backref="user")
-    c_course = db.relationship("CompletedCourse", backref="user")
-
-
-class Role(db.Model, RoleMixin):
-    __tablename__ = "role"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    description = db.Column(db.String)
-
-
-class Courses(db.Model):
-    __tablename__ = "course"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    code = db.Column(db.String, unique=True)
-    pre_requisite = db.Column(db.String)
-    level = db.Column(db.String)
-
-
-class Student(db.Model):
-    __tablename__ = "student"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    dob = db.Column(db.DateTime, nullable=False)
-    roll_no = db.Column(db.String)
-    gender = db.Column(db.String)
-    category = db.Column(db.String)
-    country = db.Column(db.String)
-    pwd = db.Column(db.String)
-    type_of_disability = db.Column(db.String)
-    requirement = db.Column(db.String)
-    bandwith = db.Column(db.String)
-    reason_of_joining = db.Column(db.String)
-    hours_dedicated = db.Column(db.String)
-    source_kind = db.Column(db.String)
-    target_for_iitm = db.Column(db.String)
-
-
-class SchoolDetails(db.Model):
-    __tablename__ = "schooldetails"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    school_name = db.Column(db.String)
-    type_of_school = db.Column(db.String)
-    marks = db.Column(db.String)
-    pass_status = db.Column(db.String)
-    year_of_passing = db.Column(db.String)
-    city = db.Column(db.String)
-    state = db.Column(db.String)
-    other_city = db.Column(db.String)
-    other_state = db.Column(db.String)
-    country_of_school = db.Column(db.String)
-
-
-class CollegeDetails(db.Model):
-    __tablename__ = "collegedetails"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    college_name = db.Column(db.String)
-    university = db.Column(db.String)
-    field_of_study = db.Column(db.String)
-    roll_no = db.Column(db.String)
-    college_status = db.Column(db.String)
-    year_of_joining = db.Column(db.String)
-    year_of_completion = db.Column(db.String)
-    current_year = db.Column(db.String)
-    reason_for_dropping = db.Column(db.String)
-    college_state = db.Column(db.String)
-    college_country = db.Column(db.String)
-    qualifying_criteria = db.Column(db.String)
-
-
-class JeeDetails(db.Model):
-    __tablename__ = "jeedetails"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    jee_qualified = db.Column(db.String)
-    reg_id = db.Column(db.String)
-    qualified_month = db.Column(db.String)
-    qualified_year = db.Column(db.String)
-
-
-class CompletedCourse(db.Model):
-    __tablename__ = "completedcourse"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    course_id = db.Column(db.Integer, db.ForeignKey("course.id"))
-    marks = db.Column(db.Integer)
-    term_of_completion = db.Column(db.String)
-    course = db.relationship("Courses", backref="c")
-
-
-user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
-security = Security(app, user_datastore)
-app.app_context().push()
 db.create_all()
 
 
@@ -191,9 +88,9 @@ class Register(Resource):
 
 
 class CourseApi(Resource):
-    @auth_required("token")
-    @roles_required("admin")
+    # @auth_required("token")
     def get(self):
+        print(request.headers.get('Authentication-Token'))
         id = request.get_json().get("id")
         course = Courses.query.get(id)
         if course is None:
@@ -202,11 +99,11 @@ class CourseApi(Resource):
             "name": course.name,
             "code": course.code,
             "pre_requisite": course.pre_requisite,
-            "level": course.level,
+            "level": course.level
         }, 200
 
-    @auth_required("token")
-    @roles_required("admin")
+    # @auth_required("token")
+    # @roles_required("admin")
     def post(self):
         name = request.get_json().get("name")
         code = request.get_json().get("code")
@@ -220,8 +117,8 @@ class CourseApi(Resource):
         db.session.commit()
         return {"message": "Course Added"}, 200
 
-    @auth_required("token")
-    @roles_required("admin")
+    # @auth_required("token")
+    # @roles_required("admin")
     def put(self):
         id = request.get_json().get("id")
         course = Courses.query.get(id)
@@ -234,8 +131,8 @@ class CourseApi(Resource):
         db.session.commit()
         return {"message": "Course Updated"}, 200
 
-    @auth_required("token")
-    @roles_required("admin")
+    # @auth_required("token")
+    # @roles_required("admin")
     def delete(self):
         id = request.get_json().get("id")
         course = Courses.query.get(id)
@@ -265,7 +162,7 @@ class StudentApi(Resource):
             "reason_of_joining": student.reason_of_joining,
             "hours_dedicated": student.hours_dedicated,
             "source_kind": student.source_kind,
-            "target_for_iitm": student.target_for_iitm,
+            "target_for_iitm": student.target_for_iitm
         }
 
     @auth_required("token")
@@ -300,7 +197,7 @@ class StudentApi(Resource):
             reason_of_joining=reason_of_joining,
             hours_dedicated=hours_dedicated,
             source_kind=source_kind,
-            target_for_iitm=target_for_iitm,
+            target_for_iitm=target_for_iitm
         )
         db.session.add(student)
         db.session.commit()
@@ -354,7 +251,7 @@ class SchoolApi(Resource):
             "state": school.state,
             "other_city": school.other_city,
             "other_state": school.other_state,
-            "country_of_school": school.country_of_school,
+            "country_of_school": school.country_of_school
         }
 
     @auth_required("token")
@@ -383,7 +280,7 @@ class SchoolApi(Resource):
             state=state,
             other_city=other_city,
             other_state=other_state,
-            country_of_school=country_of_school,
+            country_of_school=country_of_school
         )
         db.session.add(school)
         db.session.commit()
@@ -438,7 +335,7 @@ class CollegeApi(Resource):
             "reason_for_dropping": college.reason_for_dropping,
             "college_state": college.college_state,
             "college_country": college.college_country,
-            "qualifying_criteria": college.qualifying_criteria,
+            "qualifying_criteria": college.qualifying_criteria
         }
 
     @auth_required("token")
@@ -470,7 +367,7 @@ class CollegeApi(Resource):
             reason_for_dropping=reason_for_dropping,
             college_state=college_state,
             college_country=college_country,
-            qualifying_criteria=qualifying_criteria,
+            qualifying_criteria=qualifying_criteria
         )
         db.session.add(college)
         db.session.commit()
@@ -519,7 +416,7 @@ class JeeApi(Resource):
             "jee_qualified": jee.jee_qualified,
             "reg_id": jee.reg_id,
             "qualified_month": jee.qualified_month,
-            "qualified_year": jee.qualified_year,
+            "qualified_year": jee.qualified_year
         }, 200
 
     @auth_required("token")
@@ -536,7 +433,7 @@ class JeeApi(Resource):
             jee_qualified=jee_qualified,
             reg_id=reg_id,
             qualified_month=qualified_month,
-            qualified_year=qualified_year,
+            qualified_year=qualified_year
         )
         db.session.add(jee)
         db.session.commit()
@@ -583,7 +480,7 @@ class CompletedCourseApi(Resource):
                 "name": course.name,
             }
             c_list.append(d)
-        return c_list
+        return c_list,200
 
     @auth_required("token")
     def post(self):
@@ -600,7 +497,7 @@ class CompletedCourseApi(Resource):
             user_id=user_id,
             course_id=course_id,
             marks=marks,
-            term_of_completion=term_of_completion,
+            term_of_completion=term_of_completion
         )
         db.session.add(c_course)
         db.session.commit()
@@ -631,7 +528,42 @@ class CompletedCourseApi(Resource):
         return {"message": "Course deleted"}, 200
 
 
+class Recommendation(Resource):
+    @auth_required("token")
+    def get(self):
+        return {"error": "No Recommendation"}, 500
+
+
 ###########################################################################################################################
+
+
+class AdminStudentSearch(Resource):
+    @auth_required("token")
+    @roles_required("admin")
+    def get(self):
+        query = request.get_json().get("query")
+        if query is None:
+            return {"error": "query cant be empty"}, 404
+        result = []
+        students = Student.query.filter(Student.roll_no.ilike(f"%{query}%")).all()
+        users = User.query.filter(User.full_name.ilike(f"%{query}%")).all()
+        if users != []:
+            slist = Student.query.filter(
+                Student.user_id.in_([user.id for user in users])
+            ).all()
+            result += [
+                {"user_id": u.id, "full_name": u.full_name, "roll_no": s.roll_no}
+                for u, s in list(zip(users, slist))
+            ]
+        if students != []:
+            ulist = User.query.filter(
+                User.id.in_([students.user_id for student in students])
+            ).all()
+            result += [
+                {"user_id": u.id, "full_name": u.full_name, "roll_no": s.roll_no}
+                for u, s in list(zip(ulist, students))
+            ]
+        return result, 200
 
 
 class AdminStudentApi(Resource):
@@ -655,7 +587,7 @@ class AdminStudentApi(Resource):
             "reason_of_joining": student.reason_of_joining,
             "hours_dedicated": student.hours_dedicated,
             "source_kind": student.source_kind,
-            "target_for_iitm": student.target_for_iitm,
+            "target_for_iitm": student.target_for_iitm
         }
 
     @auth_required("token")
@@ -692,7 +624,7 @@ class AdminStudentApi(Resource):
             reason_of_joining=reason_of_joining,
             hours_dedicated=hours_dedicated,
             source_kind=source_kind,
-            target_for_iitm=target_for_iitm,
+            target_for_iitm=target_for_iitm
         )
         db.session.add(student)
         db.session.commit()
@@ -753,7 +685,7 @@ class AdminSchoolApi(Resource):
             "state": school.state,
             "other_city": school.other_city,
             "other_state": school.other_state,
-            "country_of_school": school.country_of_school,
+            "country_of_school": school.country_of_school
         }
 
     @auth_required("token")
@@ -785,7 +717,7 @@ class AdminSchoolApi(Resource):
             state=state,
             other_city=other_city,
             other_state=other_state,
-            country_of_school=country_of_school,
+            country_of_school=country_of_school
         )
         db.session.add(school)
         db.session.commit()
@@ -849,7 +781,7 @@ class AdminCollegeApi(Resource):
             "reason_for_dropping": college.reason_for_dropping,
             "college_state": college.college_state,
             "college_country": college.college_country,
-            "qualifying_criteria": college.qualifying_criteria,
+            "qualifying_criteria": college.qualifying_criteria
         }
 
     @auth_required("token")
@@ -884,7 +816,7 @@ class AdminCollegeApi(Resource):
             reason_for_dropping=reason_for_dropping,
             college_state=college_state,
             college_country=college_country,
-            qualifying_criteria=qualifying_criteria,
+            qualifying_criteria=qualifying_criteria
         )
         db.session.add(college)
         db.session.commit()
@@ -942,7 +874,7 @@ class AdminJeeApi(Resource):
             "jee_qualified": jee.jee_qualified,
             "reg_id": jee.reg_id,
             "qualified_month": jee.qualified_month,
-            "qualified_year": jee.qualified_year,
+            "qualified_year": jee.qualified_year
         }, 200
 
     @auth_required("token")
@@ -962,7 +894,7 @@ class AdminJeeApi(Resource):
             jee_qualified=jee_qualified,
             reg_id=reg_id,
             qualified_month=qualified_month,
-            qualified_year=qualified_year,
+            qualified_year=qualified_year
         )
         db.session.add(jee)
         db.session.commit()
@@ -1036,7 +968,7 @@ class AdminCompletedCourseApi(Resource):
             user_id=user_id,
             course_id=course_id,
             marks=marks,
-            term_of_completion=term_of_completion,
+            term_of_completion=term_of_completion
         )
         db.session.add(c_course)
         db.session.commit()
@@ -1078,7 +1010,10 @@ api.add_resource(SchoolApi, "/api/school")
 api.add_resource(CollegeApi, "/api/college")
 api.add_resource(JeeApi, "/api/jee")
 api.add_resource(CompletedCourseApi, "/api/completedcourse")
+api.add_resource(Recommendation, "/api/recommendation")
 
+api.add_resource(CourseApi, "/api/admin/course")
+api.add_resource(AdminStudentSearch, "/api/admin/studentsearch")
 api.add_resource(AdminStudentApi, "/api/admin/student")
 api.add_resource(AdminSchoolApi, "/api/admin/school")
 api.add_resource(AdminCollegeApi, "/api/admin/college")
